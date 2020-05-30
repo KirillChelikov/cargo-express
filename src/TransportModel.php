@@ -14,6 +14,7 @@ class TransportModel
     /** @var float Стоимость модели транспорта за час килеметр движения */
     protected $pricePerKilometer;
 
+    protected $type;
     /**
      * TransportModel constructor.
      *
@@ -21,11 +22,12 @@ class TransportModel
      * @param string $name
      * @param float $pricePerHour
      */
-    public function __construct(int $id, string $name, float $pricePerHour)
+    public function __construct(int $id, string $name, float $pricePerHour, string $type='none')
     {
         $this->id                = $id;
         $this->name              = $name;
         $this->pricePerKilometer = $pricePerHour;
+        $this->type = $type; 
     }
 
     /**
@@ -50,5 +52,8 @@ class TransportModel
     public function getPricePerKilometer(): float
     {
         return $this->pricePerKilometer;
+    }
+    public function getType():string {
+        return $this->type;
     }
 }

@@ -18,6 +18,7 @@ class DeliveryRequest
      */
     public $toAddress;
 
+    public $isExpress;
     /**
      * DeliveryContract constructor.
      * @param int $clientId
@@ -25,11 +26,12 @@ class DeliveryRequest
      * @param string $startDate
      * @param string $toAddress
      */
-    public function __construct(int $clientId, int $transportModelId, string $startDate, string $toAddress)
+    public function __construct(int $clientId, int $transportModelId, string $startDate, string $toAddress, bool $isExpress)
     {
         $this->clientId         = $clientId;
         $this->transportModelId = $transportModelId;
         $this->startDate        = $startDate;
         $this->toAddress        = $toAddress;
+        $this->isExpress = $isExpress;
     }
 }

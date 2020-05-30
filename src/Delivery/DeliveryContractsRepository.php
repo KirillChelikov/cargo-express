@@ -13,4 +13,5 @@ interface DeliveryContractsRepository
      * @return DeliveryContract[]
      */
     public function getForTransportModel(int $transportModelId, string $date): array;
+    public function getClientExpressContracts(int $clientId):array;
 }
