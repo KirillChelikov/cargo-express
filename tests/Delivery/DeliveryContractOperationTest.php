@@ -8,7 +8,7 @@ use CargoExpress\Client;
 use CargoExpress\ClientsRepository;
 use CargoExpress\TransportModel;
 use CargoExpress\TransportModelsRepository;
-
+use CargoExpress\GroundTransportModel;
 class DeliveryContractOperationTest extends TestCase
 {
     /**
@@ -124,13 +124,14 @@ class DeliveryContractOperationTest extends TestCase
 
         $this->assertEquals(5000, $response->getDeliveryContract()->getPrice());
     }
+      /**
+     * Тест цены экспресс доставки с учетом скидки на каждый второй заказ
+     */
     public function test_ExpressDeliveryPrice() 
     {
         {
         $client1    = new Client(1, 'Джонни');
         $clientRepo = $this->makeFakeClientRepository($client1);
-
-        // Модель транспорта
         $transportModel1    = new TransportModel(1, 'Турбо Пушка', 20);
         $transportModelRepo = $this->makeFakeTransportModelRepository($transportModel1);
         $deliveryContract = new DeliveryContract($client1, $transportModel1, '2020-01-01 00:00', 'Москва', 1);
@@ -148,13 +149,14 @@ class DeliveryContractOperationTest extends TestCase
         $response = $deliveryContractOperation->execute($deliveryRequest);
         $this->assertEquals(8000, $response->getDeliveryContract()->getPrice());
     }
+      /**
+     * Экспресс доставка недоступна для жд и водного транспорта, но обязательна для воздушного транспорта
+     */
     public function test_ExpressFail() 
     {
         {
         $client1    = new Client(1, 'Джонни');
         $clientRepo = $this->makeFakeClientRepository($client1);
-
-        // Модель транспорта
         $transportModel1    = new TransportModel(1, 'Летающая Турбо Пушка', 40, 'Air');
         $transportModel2 = new TransportModel(2, 'Водная Турбо Пушка', 10, 'Water');
         $transportModelRepo = $this->makeFakeTransportModelRepository($transportModel1, $transportModel2 );
@@ -182,5 +184,19 @@ class DeliveryContractOperationTest extends TestCase
         $this->assertStringContainsString($message, $response->getErrors()[0]);
         $message2 = 'Извините, для Water транспорта не доступна экспресс доставка';
         $this->assertStringContainsString($message2, $response2->getErrors()[0]);
+    }
+     /**
+     * Для наземных моделей скорость не может быть выше ограничения скорости
+     */
+    public function test_maxSpeedOfGroundTransport() 
+    {
+        {
+        $transportModel  = new GroundTransportModel(1, 'Быстрая Турбо Пушка', 500, 'Ground', 9000);
+        $transportModel1 = new GroundTransportModel(2, 'Медленная Турбо Пушка', 1, 'Ground', 20);
+        }
+    $this->assertInstanceOf(TransportModel::class, $transportModel);
+     $this->assertEquals($GLOBALS['speedRestriction'], $transportModel->getSpeed());
+     $this->assertEquals(20, $transportModel1->getSpeed());
+    
     }
 }

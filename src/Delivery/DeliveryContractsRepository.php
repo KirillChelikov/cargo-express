@@ -13,5 +13,11 @@ interface DeliveryContractsRepository
      * @return DeliveryContract[]
      */
     public function getForTransportModel(int $transportModelId, string $date): array;
+    /**
+     * Возвращает список договоров экспресс-доставок клиента
+     *
+     * @param int $clientId
+     * @return DeliveryContract[]
+     */
     public function getClientExpressContracts(int $clientId):array;
 }

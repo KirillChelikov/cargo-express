@@ -23,12 +23,13 @@ class DeliveryContractOperation
      */
     protected $transportModelsRepository;
 
+   
     /**
-     * DeliveryContractOperation constructor.
-     *
-     * @param DeliveryContractsRepository $contractsRepo
-     * @param ClientsRepository $clientsRepo
-     * @param TransportModelsRepository $transportModelsRepo
+     * 
+     * Делаем повторный расчет цены при экспресс доставке;
+     * @param array $contracts;
+     * @param bool $isExpress;
+     * @return float;
      */
     private function getPriceMultiplier($contracts, bool $isExpress):float {
         $multiplier = 1;
@@ -40,6 +41,13 @@ class DeliveryContractOperation
         }
         return $multiplier;
     }
+     /**
+     * 
+     *
+     * @param DeliveryRequest $request;
+     * @return array;
+     */
+    // Проверяем заказ на наличие ошибок, возможно стоит вынести в отдельный
     private function getErrors( $request) {
         $errors = [];
         $expressOnlyTypes = array('Air');
@@ -55,6 +63,13 @@ class DeliveryContractOperation
           }
         return $errors;
     }
+     /**
+     * DeliveryContractOperation constructor.
+     *
+     * @param DeliveryContractsRepository $contractsRepo
+     * @param ClientsRepository $clientsRepo
+     * @param TransportModelsRepository $transportModelsRepo
+     */
     public function __construct(DeliveryContractsRepository $contractsRepo, ClientsRepository $clientsRepo, TransportModelsRepository $transportModelsRepo)
     {
         $this->contractsRepository       = $contractsRepo;

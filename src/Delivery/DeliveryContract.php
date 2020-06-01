@@ -28,6 +28,8 @@ class DeliveryContract
      * @param Client $client
      * @param TransportModel $transportModel
      * @param string $startDate
+     * @param string $city
+     * @param float $priceMultiplier
      */
     public function __construct(Client $client, TransportModel $transportModel, string $startDate, string $city, float $priceMultiplier)
     {
