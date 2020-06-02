@@ -1,0 +1,45 @@
+CREATE TABLE transport
+(
+id int,
+name text,
+price int,
+weight int,
+speed int,
+category_id int
+)
+CREATE TABLE categories (
+id int,
+category text
+)
+1.Получить минимальную, максимальную и среднюю цену за километр всего транспорта грузоподъемностью более 20 тонн.
+SELECT MAX(price) as max,
+MIN(price) as min,
+AVG(price) as average
+FROM `transport`
+WHERE weight > 20;
+
+2.Выбрать наземный транспорт, максимальная скорость которого больше, чем 70км/ч.
+SELECT transport.name as name 
+FROM `categories`
+LEFT JOIN `transport` 
+ON categories.id = transport.category_id
+WHERE categories.category = 'ground' 
+AND transport.speed > 70
+
+3.Выбрать категорию с наибольшим количеством транспорта.
+SELECT categories.category, count(*) FROM `transport` 
+LEFT JOIN `categories` on transport.category_id = categories.id 
+GROUP by category_id 
+ORDER by count(*) 
+DESC 
+LIMIT 1
+
+4.Выбрать категории, в которых количество транспорта, грузоподъемность которого более 15 тонн, превышает количество транспорта, грузоподъемность которого менее 15 тонн.
+SELECT c.category 
+FROM 
+(SELECT COUNT(name) as less15, category_id  FROM `transport` WHERE weight < 15 GROUP BY category_id) a 
+LEFT JOIN (SELECT COUNT(name) as more15, category_id FROM `transport` WHERE weight > 15 GROUP BY category_id) b 
+ON a.category_id = b.category_id 
+LEFT JOIN `categories` c 
+ON c.id = a.category_id 
+WHERE more15 > less15
